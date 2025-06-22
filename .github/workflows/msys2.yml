@@ -12,7 +12,6 @@ on:
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: RelWithDebInfo
-  TMPTMP: ${{github.workspace}}/temp/
 
 jobs:
   build:
@@ -27,9 +26,9 @@ jobs:
     - name: Setup MSYS2
       uses: msys2/setup-msys2@v2
 
-    - name: 'Temp dir: ${{env.TMPTMP}}'
+    - name: 'Temp dir: temp'
       run: |
-        mkdir ${{env.TMPTMP}}
+        mkdir temp
 
     - name: 'Restore DLS Cache'
       uses: actions/cache/restore@v4
@@ -38,7 +37,7 @@ jobs:
         key: soundfont.dls
         path: temp/soundfont.dls
         enableCrossOsArchive: true
-    
+
     - name: 'Copy soundfont to ${{env.TEMP}}'
       if: steps.cache.outputs.cache-hit == 'true'
       run: |
@@ -50,7 +49,7 @@ jobs:
     - name: 'Copy from ${{env.TEMP}}'
       if: steps.cache.outputs.cache-hit != 'true'
       run: |
-        cp ${{env.TEMP}}/soundfont.dls /temp/soundfont.dls 
+        cp ${{env.TEMP}}/soundfont.dls temp/soundfont.dls
 
     - name: 'Store DLS Cache'
       if: steps.cache.outputs.cache-hit != 'true'

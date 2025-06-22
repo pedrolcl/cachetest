@@ -23,16 +23,16 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: 'Temp dir: ${{github.workspace}}/temp'
+    - name: 'Temp dir: ${{env.TEMP}}'
       run: |
-        mkdir -p ${{github.workspace}}/temp
+        mkdir -p ${{env.TEMP}}
 
     - name: 'Restore DLS Cache'
       uses: actions/cache/restore@v4
       id: cache
       with:
         key: soundfont.dls
-        path: ${{github.workspace}}/temp
+        path: temp/soundfont.dls
         enableCrossOsArchive: true
 
     - name: Configure CMake
@@ -45,7 +45,7 @@ jobs:
       uses: actions/cache/save@v4
       with:
         key: soundfont.dls
-        path: ${{github.workspace}}/temp
+        path: temp/soundfont.dls
         enableCrossOsArchive: true
 
     - name: Build

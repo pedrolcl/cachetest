@@ -32,10 +32,6 @@ jobs:
           cmake:p
           ninja:p
 
-    - name: 'Temp dir: temp'
-      run: |
-        mkdir temp
-
     - name: Downloading a DLS file for testing'
       uses: ethanjli/cached-download-action@6bee1d546f48427140e81ed759b343229c93b7c5
       with:

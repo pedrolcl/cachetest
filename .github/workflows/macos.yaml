@@ -18,10 +18,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: 'Temp dir: ${{env.TEMP}}'
-      run: |
-        mkdir -p ${{env.TEMP}}
-
     - name: Downloading a DLS file for testing'
       uses: ethanjli/cached-download-action@6bee1d546f48427140e81ed759b343229c93b7c5
       with:

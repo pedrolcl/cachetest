@@ -38,18 +38,18 @@ jobs:
         path: temp/soundfont.dls
         enableCrossOsArchive: true
 
-    - name: 'Copy soundfont to ${{env.TEMP}}'
+    - name: 'Copy soundfont to TEMP'
       if: steps.cache.outputs.cache-hit == 'true'
       run: |
-        cp temp/soundfont.dls ${{env.TEMP}}
+        cp temp/soundfont.dls $TEMP
 
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
-    - name: 'Copy from ${{env.TEMP}}'
+    - name: 'Copy from TEMP'
       if: steps.cache.outputs.cache-hit != 'true'
       run: |
-        cp ${{env.TEMP}}/soundfont.dls temp/soundfont.dls
+        cp $TEMP/soundfont.dls temp/soundfont.dls
 
     - name: 'Store DLS Cache'
       if: steps.cache.outputs.cache-hit != 'true'

@@ -53,7 +53,7 @@ jobs:
         cp temp/soundfont.dls $TEMP
 
     - name: Configure CMake
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -G Ninja
+      run: cmake -B build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -G Ninja
 
     - name: 'Copy from TEMP'
       if: steps.cache.outputs.cache-hit != 'true'
@@ -69,13 +69,9 @@ jobs:
         enableCrossOsArchive: true
 
     - name: Build
-      # Build your program with the given configuration
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+      run: cmake --build build --config ${{env.BUILD_TYPE}}
 
     - name: Test
-      working-directory: ${{github.workspace}}/build
-      # Execute tests defined by the CMake configuration.
-      # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
+      working-directory: build
       run: ctest -C ${{env.BUILD_TYPE}} -VV
-
 

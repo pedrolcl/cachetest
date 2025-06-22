@@ -25,6 +25,15 @@ jobs:
 
     - name: Setup MSYS2
       uses: msys2/setup-msys2@v2
+      with:
+        release: false
+        msystem: MINGW64
+        install: >-
+          make
+        pacboy: >-
+          toolchain:p
+          cmake:p
+          ninja:p
 
     - name: 'Temp dir: temp'
       run: |
@@ -44,7 +53,7 @@ jobs:
         cp temp/soundfont.dls $TEMP
 
     - name: Configure CMake
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -G Ninja
 
     - name: 'Copy from TEMP'
       if: steps.cache.outputs.cache-hit != 'true'

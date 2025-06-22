@@ -40,7 +40,7 @@ jobs:
         enableCrossOsArchive: true
     
     - name: 'Copy soundfont to ${{env.TEMP}}'
-      if: steps.cache.outputs.cache-hit = 'true'
+      if: steps.cache.outputs.cache-hit == 'true'
       run: |
         cp temp/soundfont.dls ${{env.TEMP}}
 

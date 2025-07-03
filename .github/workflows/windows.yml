@@ -21,6 +21,10 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: 'Workaround for missing zstd in windows-11-arm'
+      if: matrix.os == 'windows-11-arm'
+      run: choco install zstandard
+
     - name: 'Temp dir: ${{env.TEMP}}'
       run: |
         mkdir ${{env.TEMP}}

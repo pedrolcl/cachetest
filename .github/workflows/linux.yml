@@ -1,0 +1,52 @@
+name: Linux CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+env:
+  BUILD_TYPE: RelWithDebInfo
+  TEMP: ${{github.workspace}}/temp/
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, ubuntu-24.04-arm]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: 'Temp dir: ${{env.TEMP}}'
+      run: |
+        mkdir -p ${{env.TEMP}}
+
+    - name: 'Restore DLS Cache'
+      uses: actions/cache/restore@v4
+      id: cache
+      with:
+        key: soundfont.dls
+        path: temp/soundfont.dls
+        enableCrossOsArchive: true
+
+    - name: Configure CMake
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+
+    - name: 'Store DLS Cache'
+      if: steps.cache.outputs.cache-hit != 'true'
+      uses: actions/cache/save@v4
+      with:
+        key: soundfont.dls
+        path: temp/soundfont.dls
+        enableCrossOsArchive: true
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+    - name: Test
+      working-directory: ${{github.workspace}}/build
+      run: ctest -C ${{env.BUILD_TYPE}} -VV

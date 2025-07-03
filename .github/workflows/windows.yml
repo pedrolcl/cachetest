@@ -21,6 +21,10 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: 'Workaround for missing zstd in windows-11-arm'
+      if: matrix.os == 'windows-11-arm'
+      run: choco install zstandard
+
     - name: Downloading a DLS file for testing'
       uses: ethanjli/cached-download-action@6bee1d546f48427140e81ed759b343229c93b7c5
       with:

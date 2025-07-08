@@ -1,0 +1,74 @@
+name: Windows MSYS2 CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+env:
+  BUILD_TYPE: RelWithDebInfo
+
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup MSYS2
+      uses: msys2/setup-msys2@v2
+      with:
+        release: false
+        msystem: MINGW64
+        install: >-
+          make
+        pacboy: >-
+          toolchain:p
+          cmake:p
+          ninja:p
+
+    - name: 'Temp dir: temp'
+      run: |
+        mkdir temp
+
+    - name: 'Restore DLS Cache'
+      uses: actions/cache/restore@v4
+      id: cache
+      with:
+        key: soundfont.dls
+        path: temp/soundfont.dls
+        enableCrossOsArchive: true
+
+    - name: 'Copy soundfont to TEMP'
+      if: steps.cache.outputs.cache-hit == 'true'
+      run: |
+        cp temp/soundfont.dls $TEMP
+
+    - name: Configure CMake
+      run: cmake -B build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -G Ninja
+
+    - name: 'Copy from TEMP'
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: |
+        cp $TEMP/soundfont.dls temp/soundfont.dls
+
+    - name: 'Store DLS Cache'
+      if: steps.cache.outputs.cache-hit != 'true'
+      uses: actions/cache/save@v4
+      with:
+        key: soundfont.dls
+        path: temp/soundfont.dls
+        enableCrossOsArchive: true
+
+    - name: Build
+      run: cmake --build build --config ${{env.BUILD_TYPE}}
+
+    - name: Test
+      working-directory: build
+      run: ctest -C ${{env.BUILD_TYPE}} -VV
+

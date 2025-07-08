@@ -12,11 +12,11 @@ The goal of the test project is to implement a cache mechanism to avoid download
 
 ## branch `cache-test`, pull request #1 - pedrolcl/cachetest/pull/1
 
-This method implements the cache using `actions/cache/save@v4` and `actions/cache/restore@v4`. The build system is responsible for downloading the test file when the cache does not exist.
+This method implements the cache using `actions/cache/save@v4` and `actions/cache/restore@v4`. The CMake build system is responsible for downloading the test file when the cache does not exist.
 
 ## branch `alternative-cache`, pull request #2 - pedrolcl/cachetest/pull/2
 
-This method uses `ethanjli/cached-download-action` to handle both downloading the test file and store/restore the cache. See https://github.com/ethanjli/cached-download-action.
+This method uses `ethanjli/cached-download-action@v0.1.3` to handle both downloading the test file and store/restore the cache. See https://github.com/ethanjli/cached-download-action.
 
 ## caveats
 
